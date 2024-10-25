@@ -1,0 +1,436 @@
+{% extends "invoicer/dashboard_base.html" %}
+{% load static %}
+
+{% block title %}Create Invoice - Invoicer{% endblock %}
+{% block og_title %}Create Invoice - Invoicer{% endblock %}
+{% block meta_description %}Create Invoice in the Invoicer app{% endblock %}
+{% block og_image %}{% static "assets/automagic-developer.jpg" %}{% endblock %}
+
+{% block page_css %}
+
+    <!-- Bootstrap Date Picker Plugin -->
+    <link rel="stylesheet" href="{% static "invoicer/css/bootstrap-datepicker.min.css" %}" onload="this.media='all'"/>
+
+    <!-- Select 2 Plugin -->
+    <link href="{% static "invoicer/css/select2.min.css" %}" rel="stylesheet" onload="this.media='all'" />
+    <style>
+        .select2-results__option, .select2-selection__rendered {
+          font-size: .875em;
+        }
+        /* Set the same height as a regular form control input */
+        .select2-container .select2-selection--single {
+          height: calc(1.5em + 0.75rem + 2px);
+        }
+
+        /* Set the same border as a regular form control input */
+        .select2-container .select2-selection--single:focus {
+          border-color: var(--skin-color);
+          box-shadow: var(--skin-color-box-shadow);
+        }
+
+        /* Set the same padding as a regular form control input */
+        .select2-container .select2-selection--single .select2-selection__rendered {
+          padding: 0.375rem 0.75rem;
+        }
+
+        /* Set the same font size and line-height as a regular form control input */
+        .select2-container .select2-selection--single .select2-selection__rendered {
+          line-height: 1.5;
+        }
+
+        /* Set the same border radius as a regular form control input */
+        .select2-container--default .select2-selection--single {
+          border-radius: 0.3rem;
+        }
+        .select2-container--default .select2-results__option--highlighted[aria-selected],
+        .select2-container--default .select2-results__option--highlighted[aria-selected]:hover,
+        .select2-container--default .select2-results__option--highlighted[aria-selected]:focus {
+            background-color: var(--skin-color);
+            color: #fff;
+        }
+        span.select2.select2-container.select2-container--default.w-100.select2-container--above.select2-container--focus{
+            width: 100%;
+        }
+        .select2-container {
+          align-items: center;
+        }
+
+        .select2-container .select2-selection {
+          margin-top: 0 !important;
+          margin-bottom: 0 !important;
+          height: auto !important;
+        }
+
+        .select2-container .select2-selection__arrow {
+          height: 100% !important;
+        }
+        .select2-selection__choice__remove {
+          display: none;
+        }
+        .select2-container--default .select2-selection--single .select2-selection__clear{
+            display: flex;
+            align-items: center;
+        }
+
+    </style>
+
+    <style>
+        #add_new_invoice {
+            background-color: var(--skin-color);
+        }
+    </style>
+
+{% endblock %}
+
+{% block page_js %}
+
+    <!-- Jquery -->
+    <script src="{% static "invoicer/js/jquery-3.6.4.min.js" %}"></script>
+
+    <!-- Bootstrap Date Picker Plugin -->
+    <script src="{% static "invoicer/js/bootstrap-datepicker.min.js" %}"></script>
+    <script>
+        $(document).ready(function() {
+          $('#id_due_date').datepicker();
+        });
+        $(document).ready(function() {
+          $('#id_due_date').datepicker({
+            autoclose: true
+          });
+        });
+        $(document).ready(function() {
+          $('#id_due_date').datepicker({
+            autoclose: true,
+            todayHighlight: true
+          });
+        });
+        $(document).ready(function() {
+          $('#id_due_date').datepicker({
+            format: ' dd-mm-yyyy',
+            autoclose: true,
+            todayHighlight: true
+          });
+        });
+    </script>
+
+    <!-- Select 2 Plugin -->
+    <script src="{% static "invoicer/js/select2.min.js" %}"></script>
+    <script>
+        $(document).ready(function() {
+          $('#id_client').select2();
+        });
+        $(document).ready(function() {
+          $('#id_client').select2({
+            placeholder: 'Select a client',
+            allowClear: true
+          });
+        });
+        $(document).ready(function() {
+          $('#id_client').select2({
+            placeholder: 'Select a client',
+            allowClear: true
+          });
+        });
+    </script>
+
+    <script>
+
+        let formsCount = 1;
+
+        let servicesTable = document.getElementById('servicesTable');
+        let serviceRow = servicesTable.querySelector('tbody > tr').cloneNode(true);
+
+        function updateTotalForms(){
+            let totalForms = document.querySelector("#id_form-TOTAL_FORMS")
+            totalForms.setAttribute('value', `${formsCount}`) //Increment the number of total forms in the management form
+        }
+
+        function prepareNewRow(newRowElement) {
+            formsCount += 1;
+
+            let formRegex = RegExp(`form-(\\d){1}-`,'g') //Regex to find all instances of the form number
+            newRowElement.innerHTML = newRowElement.innerHTML.replace(formRegex, `form-${formsCount-1}-`)
+
+            updateTotalForms()
+        }
+
+        function adjustRows() {
+          let tbody = servicesTable.querySelector('tbody');
+          let rows = tbody.querySelectorAll('tr');
+
+          rows.forEach((row, index) => {
+            let inputs = row.querySelectorAll('input, select, textarea');
+            inputs.forEach((input) => {
+              let name = input.getAttribute('name');
+              if (name && name.match(/^form-\d+-/)) {
+                input.setAttribute('name', name.replace(/\d+/, index));
+              }
+            });
+          });
+        }
+
+        function addNewRow(btnElement) {
+            let currentRowElement = btnElement.parentElement.parentElement;
+            let newRowElement = serviceRow.cloneNode(true);
+            // Replace the IDs and names in the new rows
+            prepareNewRow(newRowElement);
+            currentRowElement.parentNode.insertBefore(newRowElement, currentRowElement.nextSibling);
+            addRowEventListeners(newRowElement);
+            adjustRows()
+        }
+
+        function addRowToHead(){
+            let newRowElement = serviceRow.cloneNode(true);
+            prepareNewRow(newRowElement);
+            let tbodyElement = servicesTable.querySelector('tbody');
+            if (tbodyElement.firstChild) {
+                // if the tbody already contains some rows, insert the new row before the first row
+                tbodyElement.insertBefore(newRowElement, tbodyElement.firstChild);
+            } else {
+                // if the tbody is empty, append the new row to the tbody
+                tbodyElement.appendChild(newRowElement);
+            }
+            //tbodyElement.appendChild(newRowElement);
+            addRowEventListeners(newRowElement);
+            adjustRows()
+        }
+
+        function deleteRow(btnElement) {
+            // Delete the row
+            btnElement.parentElement.parentElement.remove();
+            formsCount -= 1;
+            adjustRows()
+            updateTotalForms()
+        }
+
+        function clearRow(newRowElement) {
+            // Remove prepopulated values inside the form fields
+            let inputFields = newRowElement.querySelectorAll('input[type="text"], input[type="number"]');
+            let textareaFields = newRowElement.querySelectorAll('textarea');
+            inputFields.forEach(inputField => inputField.value = '');
+            textareaFields.forEach(textareaField => textareaField.value = '');
+            return newRowElement
+        }
+
+    </script>
+    <script>
+
+        function addRowEventListeners(row) {
+            const quantityField = row.querySelector('.quantity');
+            const unitPriceField = row.querySelector('.unit-price');
+            const totalPriceField = row.querySelector('.total-price');
+            quantityField.addEventListener('input', () => {
+                updateTotalPrice(row);
+            });
+            unitPriceField.addEventListener('input', () => {
+                updateTotalPrice(row);
+            });
+            // Set initial total price
+            updateTotalPrice(row);
+        }
+        addRowEventListeners(servicesTable.querySelector('tbody > tr'));
+
+        function updateTotalPrice(row) {
+            const quantity = row.querySelector('.quantity').value;
+            const unitPrice = row.querySelector('.unit-price').value;
+            const totalPriceField = row.querySelector('.total-price');
+            const totalPrice = (quantity * unitPrice).toFixed(2);
+            totalPriceField.value = totalPrice;
+        }
+
+        // loop through all rows and update total price when quantity or unit price changes
+        const rows = document.querySelectorAll('.table tbody tr');
+        rows.forEach(row => {
+            const quantityField = row.querySelector('.quantity');
+            const unitPriceField = row.querySelector('.unit-price');
+            quantityField.addEventListener('input', () => {
+                updateTotalPrice(row);
+            });
+            unitPriceField.addEventListener('input', () => {
+                updateTotalPrice(row);
+            });
+        });
+
+    </script>
+
+{% endblock %}
+
+{% block dashboard_content %}
+
+    <div class="site-padding">
+        <form class="form-horizontal form-bordered" method="post">
+        {% csrf_token %}
+        <div class="card my-5 dashboard-card">
+            <div class="card-header" style="position:relative;">
+                <h5 class="card-title skin-color mt-2 fs-6 skin-color">
+                    Add New Invoice
+                </h5>
+            </div>
+            <div class="card-body table-responsive">
+
+                {{ service_formset.management_form }}
+
+                {% if invoice_form.errors %}
+                    {{ invoice_form.errors }}
+                {% endif %}
+
+                {% if service_formset.errors %}
+                    <div class="alert alert-danger">Services Form Errors:<br>
+                        {% for error_dict in service_formset.errors %}
+                            {% for field, errors in error_dict.items %}
+                                {% for error in errors %}
+                                    * {{ field }}: {{ error }}<br>
+                                {% endfor %}
+                            {% endfor %}
+                        {% endfor %}
+                    </div>
+                {% endif %}
+
+                <!-- Title -->
+                <div class="form-group row pb-4">
+                    <label class="col-lg-3 control-label text-lg-end pt-2 small fw-normal text-secondary mb-3 mb-lg-0" for="id_title">
+                        Title*
+                    </label>
+                    <div class="col-lg-6">
+                        <input name="title" id="id_title" maxlength="100" type="text" class="form-control small" placeholder="eg.: Invoice Generator Web App" required>
+                    </div>
+                </div>
+
+                <!-- Client -->
+                <div class="form-group row pb-3">
+                    <label for="id_client" class="col-lg-3 control-label text-lg-end pt-2 small fw-normal text-secondary mb-3 mb-lg-0">Client*</label>
+                    <div class="col-lg-6">
+                        <select name="client" id="id_client" class="form-select py-5" required>
+                              {% for choice in invoice_form.client.field.choices %}
+                                <option value="{{ choice.0 }}">{{ choice.1 }}</option>
+                              {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Due Date -->
+                <div class="form-group row pb-3">
+                    <label for="id_due_date" class="col-lg-3 control-label text-lg-end pt-2 small fw-normal text-secondary mb-3 mb-lg-0">Due Date</label>
+                    <div class="col-lg-6">
+                        <div class="input-group">
+                            <span class="input-group-text">
+                                <i class="fas fa-calendar-alt"></i>
+                            </span>
+                            <input name="due_date" id="id_due_date" type="text" class="form-control small">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Currency -->
+                <div class="form-group row pb-4">
+                    <label class="col-lg-3 control-label text-lg-end pt-2 small fw-normal text-secondary mb-3 mb-lg-0">Currency*</label>
+                    <div for="id_currency" class="col-lg-6">
+                        <select name="currency" id="id_currency" class="form-select mb-3 small" required>
+                            <option>USD</option>
+                            <option>EUR</option>
+                            <option>SAR</option>
+                            <option>EGP</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Notes -->
+                <div class="form-group row pb-4">
+                    <label for="id_notes" class="col-lg-3 control-label text-lg-end pt-2 small fw-normal text-secondary mb-3 mb-lg-0">Notes</label>
+                    <div class="col-lg-6">
+                        <textarea name="notes" id="id_notes" class="form-control small" rows="3" data-plugin-textarea-autosize></textarea>
+                    </div>
+                </div>
+
+                <!-- Status -->
+                <div class="form-group row pb-4">
+                    <label class="col-lg-3 control-label text-lg-end pt-2 small fw-normal text-secondary mb-3 mb-lg-0">Status*</label>
+                    <div for="id_status" class="col-lg-6">
+                        <select name="status" id="id_status" class="form-select mb-3 small" required>
+                            <option>Pending</option>
+                            <option>Paid</option>
+                            <option>Overdue</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-lg-12 p-0 m-auto">
+                        <section class="card dashboard-card">
+                            <div class="card-header" style="position:relative;">
+                                <h5 class="card-title skin-color mt-2 fs-6">
+                                    Services
+                                </h5>
+                                <div class="card-actions" style="position: absolute; right: 10px; top: 16px;">
+                                    <button  onclick="addRowToHead();" class="m-0 btn btn-success btn-sm btn-skin" style="margin-top:-7px!important; background: #FF3C00; color: #fff;" type="button">
+                                        Add Service
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="card-body table-responsive">
+                                <table id="servicesTable" class="table table-no-more table-striped mb-1">
+                                    <thead>
+                                        <tr>
+                                            <th>Title*</th>
+                                            <th>Description</th>
+                                            <th>Quantity*</th>
+                                            <th>Unit*</th>
+                                            <th>Unit Price*</th>
+                                            <th>Total Price*</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td data-title="Title">
+                                                <input name="form-0-title" id="id_form-0-title" maxlength="100" type="text" class="form-control small" placeholder="e.g.: Frontend Development" required>
+                                            </td>
+                                            <td data-title="Description">
+                                                <textarea name="form-0-description" id="id_form-0-description" class="form-control small" rows="1" placeholder="e.g.: 30 Pages" data-plugin-textarea-autosize></textarea>
+                                            </td>
+                                            <td data-title="Quantity">
+                                                <input name="form-0-quantity" id="id_form-0-quantity" placeholder="7" style="width: 7rem;" type="number" step="1" class="form-control quantity" min="0" required>
+                                            </td>
+                                            <td data-title="Unit">
+                                                <select name="form-0-quantity_unit" id="id_form-0-quantity_unit" maxlength="100" class="form-select small" style="width: max-content;" required>
+                                                    <option>Hour</option>
+                                                    <option>Day</option>
+                                                    <option>Week</option>
+                                                    <option>Month</option>
+                                                    <option>Item</option>
+                                                </select>
+                                            </td>
+                                            <td data-title="Unit Price">
+                                                <input name="form-0-unit_price" id="id_form-0-unit_price" placeholder="6.5" style="width: 7rem;" type="number" step="0.01" class="form-control unit-price" min="0" required>
+                                            </td>
+                                            <td data-title="Total Price">
+                                                <input name="form-0-total_price" id="id_form-0-total_price" type="text" style="width:7rem;" class="form-control total-price" readonly="readonly" required>
+                                            </td>
+<!--                                            <td data-title="Currency">-->
+<!--                                                <select name="form-0-currency" id="id_form-0-currency" placeholder="45.5" maxlength="100" class="form-select small" style="width: max-content;" required>-->
+<!--                                                    <option>USD</option>-->
+<!--                                                    <option>EGP</option>-->
+<!--                                                </select>-->
+<!--                                            </td>-->
+                                            <td data-title="Actions" class="actions align-middle">
+                                                <a class="add-new-row me-3" title="Add New Row" onclick="addNewRow(this);" style="cursor: pointer;"><i class="fas fa-plus"></i></a>
+                                                <a class="delete-row me-3" title="Delete This Row" onclick="deleteRow(this);" style="cursor: pointer;"><i class="far fa-trash-alt"></i></a>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+
+                <div class="action-buttons text-center py-5">
+                    <button type="submit" class="mb-1 mt-1 me-1 btn btn-skin text-white">Create Invoice</button>
+                </div>
+
+            </div>
+        </div>
+    </form>
+    </div>
+
+{% endblock %}

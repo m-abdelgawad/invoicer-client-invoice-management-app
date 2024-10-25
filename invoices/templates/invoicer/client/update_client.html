@@ -1,0 +1,226 @@
+{% extends "invoicer/dashboard_base.html" %}
+{% load static %}
+
+{% block title %}Update Client - Invoicer{% endblock %}
+{% block og_title %}Update Client - Invoicer{% endblock %}
+{% block meta_description %}Update Client in the Invoicer app{% endblock %}
+{% block og_image %}{% static "assets/automagic-developer.jpg" %}{% endblock %}
+
+{% block page_css %}
+    <style>
+        #clients_list {
+            background-color: var(--skin-color);
+        }
+    </style>
+{% endblock %}
+
+{% block page_js %}
+
+{% endblock %}
+
+{% block dashboard_content %}
+
+    <div class="site-padding">
+        <form class="form-horizontal form-bordered" enctype="multipart/form-data" method="post">
+        {% csrf_token %}
+        <div class="card my-5 dashboard-card">
+            <div class="card-header" style="position:relative;">
+                <h5 class="card-title skin-color mt-2 fs-6 skin-color">
+                    Update Client
+                </h5>
+            </div>
+            <div class="card-body table-responsive">
+
+                <!-- First Name -->
+                <div class="form-group row pb-4">
+                    <label class="col-lg-3 control-label text-lg-end pt-2 small fw-normal text-secondary mb-3 mb-lg-0"
+                           for="id_first_name">
+                        First Name
+                    </label>
+                    <div class="col-lg-6">
+                        <input class="form-control small" id="id_first_name" name="first_name"
+                               value="{{ client.first_name }}" type="text">
+                    </div>
+                </div>
+
+                <!-- Last Name -->
+                <div class="form-group row pb-4">
+                    <label class="col-lg-3 control-label text-lg-end pt-2 small fw-normal text-secondary mb-3 mb-lg-0"
+                           for="id_last_name">
+                        Last Name
+                    </label>
+                    <div class="col-lg-6">
+                        <input class="form-control small" id="id_last_name" name="last_name"
+                               value="{{ client.last_name }}" type="text">
+                    </div>
+                </div>
+
+                <!-- Company -->
+                <div class="form-group row pb-4">
+                    <label class="col-lg-3 control-label text-lg-end pt-2 small fw-normal text-secondary mb-3 mb-lg-0"
+                           for="id_company">
+                        Company
+                    </label>
+                    <div class="col-lg-6">
+                        <input class="form-control small" id="id_company" name="company"
+                               value="{{ client.company }}"
+                               type="text">
+                    </div>
+                </div>
+
+                <!-- Email Address -->
+                <div class="form-group row pb-4">
+                    <label class="col-lg-3 control-label text-lg-end pt-2 small fw-normal text-secondary mb-3 mb-lg-0"
+                           for="id_email_address">
+                        Email Address
+                    </label>
+                    <div class="col-lg-6">
+                        <input class="form-control small" id="id_email_address" name="email_address"
+                               value="{{ client.email_address }}">
+                    </div>
+                </div>
+
+                <!-- Mobile Number -->
+                <div class="form-group row pb-4">
+                    <label class="col-lg-3 control-label text-lg-end pt-2 small fw-normal text-secondary mb-3 mb-lg-0"
+                           for="id_mobile_number">
+                        Mobile Number
+                    </label>
+                    <div class="col-lg-6">
+                        <input class="form-control small" id="id_mobile_number" id="inputDefault"
+                               name="mobile_number" value="{{ client.mobile_number }}"
+                               type="tel">
+                    </div>
+                </div>
+
+                <!-- City -->
+                <div class="form-group row pb-4">
+                    <label class="col-lg-3 control-label text-lg-end pt-2 small fw-normal text-secondary mb-3 mb-lg-0"
+                           for="id_city">
+                        City
+                    </label>
+                    <div class="col-lg-6">
+                        <input class="form-control small" id="id_city" name="city"
+                               value="{{ client.city }}"
+                               type="text">
+                    </div>
+                </div>
+
+                <!-- Country -->
+                <div class="form-group row pb-4">
+                    <label class="col-lg-3 control-label text-lg-end pt-2 small fw-normal text-secondary mb-3 mb-lg-0"
+                           for="id_country">
+                        Country
+                    </label>
+                    <div class="col-lg-6">
+                        <input class="form-control small" id="id_country" name="country"
+                               value="{{ client.country }}"
+                               type="text">
+                    </div>
+                </div>
+
+                {% if client.logo %}
+                    <!-- Client Logo -->
+                    <div class="form-group row pb-4">
+                        <label class="col-lg-3 control-label text-lg-end pt-2 small fw-normal text-secondary mb-3 mb-lg-0">Logo</label>
+                        <div class="col-lg-6">
+                            <img class="float-start m-0" src="{{ client.logo.url }}" style="max-height: 2rem; width: auto;">
+                        </div>
+                    </div>
+
+                    <div class="form-group row pb-4">
+                        <label for="deleteLogoCheckBox" class="col-lg-3 control-label text-lg-end pt-2 small fw-normal text-secondary mb-3 mb-lg-0">Delete Logo?</label>
+                        <div class="col-lg-6">
+                            <div class="checkbox-custom checkbox-danger mt-2">
+                            <input name="delete_logo" type="checkbox" id="deleteLogoCheckBox">
+                            <label></label>
+                        </div>
+                        </div>
+                    </div>
+
+                {% endif %}
+
+                <!-- Client Logo -->
+                <div class="form-group row pb-4">
+                    {% if client.logo %}
+                        <label for="id_logo" class="col-lg-3 control-label text-lg-end pt-2 small fw-normal text-secondary mb-3 mb-lg-0">Change Logo</label>
+                    {% else %}
+                        <label for="id_logo" class="col-lg-3 control-label text-lg-end pt-2 small fw-normal text-secondary mb-3 mb-lg-0">Add Logo</label>
+                    {% endif %}
+                    <div class="col-lg-6">
+                        <input class="form-control small" id="id_logo" name="logo" type="file">
+                    </div>
+                    <div class="col-3 mt-2 mt-lg-0">
+                        <button class="btn btn-danger btn-sm" id="remove_logo" style="display:none;"
+                                type="button"><i class="fa-solid fa-trash"></i></button>
+                        <script>
+                          var file_input = document.getElementById('id_logo');
+                          var remove_button = document.getElementById('remove_logo');
+
+                          file_input.addEventListener('change', function() {
+                            if (file_input.files.length > 0) {
+                              remove_button.style.display = 'block';
+                            } else {
+                              remove_button.style.display = 'none';
+                            }
+                          });
+
+                          remove_button.addEventListener('click', function() {
+                            file_input.value = '';
+                            remove_button.style.display = 'none';
+                          });
+
+                        </script>
+                    </div>
+                </div>
+
+                <div class="action-buttons text-center py-5">
+
+                    <a href="{% url 'invoicer:update_client' client.slug %}">
+                        <button type="submit" class="mb-1 mt-1 me-1 btn btn-skin text-white">Update</button>
+                    </a>
+                    <button data-bs-target="#modalDeleteClient-{{ client.id }}" data-bs-toggle="modal" type="button" class="mb-1 mt-1 me-1 btn btn-danger">Delete</button>
+
+                    <!-- Modal: Delete Client -->
+                    <div aria-hidden="true" aria-labelledby="exampleModalLabel" class="modal fade"
+                             id="modalDeleteClient-{{ client.id }}"
+                             tabindex="-1">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+                                <div class="modal-header bg-danger">
+                                    <h1 class="modal-title fs-6 text-white" id="exampleModalLabel">Delete Client?</h1>
+                                    <button aria-label="Close" class="btn-close text-white" data-bs-dismiss="modal"
+                                            style="filter: brightness(0) invert(1);" type="button"></button>
+                                </div>
+                                <div class="modal-body fw-bold py-4">
+                                    <div class="row">
+                                        <div class="col-3 text-center">
+                                            <i class="fa-solid fa-triangle-exclamation"
+                                               style="color: #ff0000; font-size: 3rem;"></i>
+                                        </div>
+                                        <div class="col-9 text-start">
+                                            <p class="fs-6 fw-normal mb-0 pb-0">
+                                                Are you sure that you want to delete this client "{{ client.first_name }} {{ client.last_name }}"?
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <a href="{% url 'invoicer:delete_client' client.slug %}">
+                                        <button class="btn btn-danger" type="button">Delete</button>
+                                    </a>
+                                    <button class="btn btn-secondary" data-bs-dismiss="modal" type="button">Cancel
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </form>
+    </div>
+
+{% endblock %}

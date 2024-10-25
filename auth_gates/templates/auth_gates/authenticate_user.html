@@ -1,0 +1,74 @@
+{% extends "invoicer/dashboard_base.html" %}
+{% load static %}
+
+{% block title %}Login{% endblock %}
+{% block og_title %}Login{% endblock %}
+{% block meta_description %}Login page of the Invoicer app{% endblock %}
+{% block og_image %}{% static "assets/automagic-developer.jpg" %}{% endblock %}
+
+{% block page_css %}
+<style>
+    #invoices_login {
+        background-color: var(--skin-color);
+    }
+
+</style>
+{% endblock %}
+
+{% block page_js %}
+
+{% endblock %}
+
+{% block dashboard_content %}
+    <!-- Start Login Form section-->
+    <section class="py-5 login-section">
+        <div class="container px-5 my-5 text-center">
+
+            <!-- Login form-->
+            <div class="brounded-3 my-5">
+
+                <!-- Start Section Title -->
+                <div class="row gx-5 justify-content-center">
+                    <div class="col-lg-8 col-xl-6 mb-1">
+                        <div class="text-center mb-5">
+
+                            <!-- Contact Form Section Title -->
+                            <h1 class="page-heading">Sign In Or Register</h1>
+
+                        </div>
+                    </div>
+                </div>
+                <!-- End Section Title -->
+
+                <div class="row gx-5 justify-content-evenly mt-3">
+
+                    <div class="col-lg-4">
+
+                        <h3 class="text-muted mb-5">Sign In</h3>
+
+                        {% include "auth_gates/includes/login_form.html" with form=form %}
+
+                    </div>
+
+                    <div class="col-lg-1 border-end ps-0 ms-0" style="width:0;"></div>
+                    
+
+                    <div class="col-lg-4 mt-5 mt-lg-0">
+
+                        <h3 class="text-muted mb-5">Register</h3>
+
+                        {% include "auth_gates/includes/signup_form.html" with form=form %}
+
+                    </div>
+                    
+                </div>
+            </div>
+            <!-- End Sign in Form -->
+
+        </div> <!-- End Container -->
+    </section>
+    <!-- End Login Form Section-->
+{% endblock %}
+
+{% block extra_body %}
+{% endblock %}

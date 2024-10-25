@@ -1,0 +1,64 @@
+{% extends "invoicer/dashboard_base.html" %}
+{% load static %}
+
+{% block title %}Home{% endblock %}
+{% block og_title %}Home{% endblock %}
+{% block meta_description %}Landing page of the Invoicer app{% endblock %}
+{% block og_image %}{% static "assets/automagic-developer.jpg" %}{% endblock %}
+
+{% block page_css %}
+<style>
+    #invoices_home {
+        background-color: var(--skin-color);
+    }
+
+</style>
+{% endblock %}
+
+{% block page_js %}
+
+{% endblock %}
+
+
+{% block dashboard_content %}
+
+<div class="mt-5 text-center border-bottom">
+    <h1 class="display-4 fw-bold text-body-emphasis">Invoicer Application</h1>
+    <div class="col-lg-6 mx-auto">
+        <p class="lead mb-4">
+            The Invoicer web application provides a free and user-friendly
+            platform for managing clients and generating professional invoices with ease.
+        </p>
+    </div>
+    <div class="overflow-hidden" style="max-height: 30vh;">
+        <div class="container px-5">
+            <img alt="Example image" class="img-fluid border rounded-3 shadow-lg mb-4" height="500"
+                 loading="lazy" src="{% static "assets/home-header-image.png" %}" width="700">
+        </div>
+    </div>
+</div>
+
+<div class="container px-5 py-5 my-5 bg-light">
+    <div class="row gx-5 align-items-center justify-content-center">
+        <div class="col-lg-8 col-xl-7 col-xxl-6">
+            <div class="my-5 text-center text-xl-start">
+                <h2 class="fw-bolder mb-2">
+                    Revolutionize Your Business with Invoice Management Software
+                </h2>
+                <p class="lead fw-normal mb-4">
+                    Discover the future of invoicing with Invoicer! Streamline your
+                    billing process, increase efficiency, and watch our promo video to
+                    see it in action.
+                </p>
+            </div>
+        </div>
+        <div class="col-xl-5 col-xxl-6 text-center">
+            <div class="ratio ratio-16x9">
+                <img alt="Example image" class="img-fluid border rounded-3 shadow-lg mb-4" height="500"
+                 loading="lazy" src="{% static "assets/preview-video.png" %}" width="700">
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

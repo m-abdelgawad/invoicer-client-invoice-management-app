@@ -1,0 +1,68 @@
+#wrapper {
+    overflow-x: hidden;
+}
+
+#sidebar-wrapper {
+    min-height: 100vh;
+    margin-left: -15rem;
+    transition: margin 0.25s ease-out;
+    z-index: 9999;
+}
+
+#sidebar-wrapper .sidebar-heading {
+    padding: 0.875rem 1.25rem;
+    font-size: 1.2rem;
+}
+
+#sidebar-wrapper {
+    width: 15rem;
+}
+
+#page-content-wrapper {
+    min-width: 100vw;
+}
+
+body.sb-sidenav-toggled #wrapper #sidebar-wrapper {
+    margin-left: 0;
+}
+
+@media (min-width: 768px) {
+    #sidebar-wrapper {
+        margin-left: 0;
+    }
+
+    #page-content-wrapper {
+        min-width: 0;
+        width: 100%;
+    }
+
+    body.sb-sidenav-toggled #wrapper #sidebar-wrapper {
+        margin-left: -15rem;
+    }
+}
+
+/* Dashoboard Sidebar */
+.nav-link.sidebar-link {
+    color: #FFF;
+}
+
+table thead tr th {
+    font-size: 0.9rem;
+}
+
+table tbody tr td {
+    font-size: 0.8rem;
+}
+
+.dashboard-card {
+    border-top-color: var(--skin-color);
+    border-top-width: 3px;
+}
+
+.icon-skin {
+    color:
+}
+
+.small, small {
+    font-size: .875rem !important;
+}

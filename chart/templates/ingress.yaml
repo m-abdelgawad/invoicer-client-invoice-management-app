@@ -1,0 +1,32 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: automagic-app-ingress
+  namespace: automagic-developer
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: mohamedabdelgawad.online
+    http:
+      paths:
+        - path: /
+          backend:
+            service:
+              name: automagic-nginx-service
+              port:
+                number: 8080
+          path: /
+          pathType: Prefix
+  - host: automagicdeveloper.com
+    http:
+      paths:
+        - path: /
+          backend:
+            service:
+              name: automagic-nginx-service
+              port:
+                number: 8080
+          path: /
+          pathType: Prefix

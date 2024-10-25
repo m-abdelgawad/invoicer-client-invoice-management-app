@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: automagic-app-service
+  namespace: automagic-developer
+  labels:
+    name: automagic-app-service
+    environment: production
+    app: automagic-developer
+    service-type: application
+spec:
+  ports:
+  - port: 8000
+    targetPort: 8000
+  selector:
+    name: automagic-app-pod
+    environment: production
+    app: automagic-developer
+    service-type: application

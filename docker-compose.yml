@@ -1,0 +1,68 @@
+services:
+
+  invoicer-db-service:
+    container_name: invoicer_db
+    image: postgres:14.8
+    env_file:
+      - .env
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      PGDATA: ${PGDATA}
+    ports:
+      - ${POSTGRES_PORT}:${POSTGRES_PORT}
+    volumes:
+      - ${DB_DATA_VOLUME}:${PGDATA}
+    networks:
+      - invoicer_backend
+    restart: always
+
+  invoicer_app:
+    container_name: invoicer_app
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    depends_on:
+      - ${POSTGRES_HOSTNAME}
+#    ports:
+#      - ${APP_PORT}:${APP_PORT}
+    volumes:
+      - ${STATIC_VOLUME}:/invoicer/static/
+      - ${APP_MEDIA_VOLUME}:/invoicer/media/
+    env_file:
+      - .env
+    networks:
+      - invoicer_frontend
+      - invoicer_backend
+    restart: always
+
+  nginx:
+      image: nginx:latest
+      container_name: invoicer_nginx
+      ports:
+        - ${NGINX_PORT}:${NGINX_PORT}
+      volumes:
+        - ./nginx.template:/etc/nginx/templates/default.template
+        - ${APP_MEDIA_VOLUME}:/invoicer/media/
+      environment:
+          APP_PORT: ${APP_PORT}
+          NGINX_PORT: ${NGINX_PORT}
+      entrypoint: [ "/bin/sh", "-c", "envsubst '$$APP_PORT $$NGINX_PORT' < /etc/nginx/templates/default.template > /etc/nginx/conf.d/default.conf && exec nginx -g 'daemon off;'" ]
+      depends_on:
+        - invoicer_app
+      networks:
+        - invoicer_frontend
+      restart: always
+
+volumes:
+  app_static:
+    name: ${STATIC_VOLUME}
+
+networks:
+  invoicer_frontend:
+    name: invoicer_frontend
+    driver: bridge
+  invoicer_backend:
+    name: invoicer_backend
+    driver: bridge

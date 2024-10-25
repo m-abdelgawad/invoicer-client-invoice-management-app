@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: automagic-cm
+  namespace: automagic-developer
+data:
+  DEBUG: "True"
+  IS_PRODUCTION: "True"
+  POSTGRES_HOSTNAME: "invoicer-db-service"
+  POSTGRES_DB: "invoicer"
+  POSTGRES_PORT: "5432"
+  POSTGRES_USER: "dbuser"
+  PGDATA: "/var/lib/postgresql/data/"
+  APP_PORT: "8000"
+  NGINX_PORT: "5000"
+  DB_DATA_VOLUME: "/mounts/invoicer_db_data/"
+  APP_MEDIA_VOLUME: "/mounts/invoicer_app_media/"
+  STATIC_VOLUME: "app_static"

@@ -1,0 +1,123 @@
+{% extends "invoicer/dashboard_base.html" %}
+{% load static %}
+
+{% block title %}View Your Profile - Invoicer{% endblock %}
+{% block og_title %}View Your Profile - Invoicer{% endblock %}
+{% block meta_description %}View Your Profile in the Invoicer app{% endblock %}
+{% block og_image %}{% static "assets/automagic-developer.jpg" %}{% endblock %}
+
+{% block page_css %}
+    <style>
+        #profile {
+            background-color: var(--skin-color);
+        }
+    </style>
+{% endblock %}
+
+{% block page_js %}
+
+{% endblock %}
+
+{% block dashboard_content %}
+
+    <div class="site-padding">
+        <div class="card my-5 dashboard-card">
+    <div class="card-header" style="position:relative;">
+        <h5 class="card-title skin-color mt-2 fs-6 skin-color">
+            Your Profile
+        </h5>
+    </div>
+    <div class="card-body table-responsive">
+
+        <!-- First Name -->
+        <div class="form-group row pb-4">
+            <label class="col-lg-3 control-label text-lg-end pt-2 small fw-normal text-secondary mb-3 mb-lg-0" for="id_first_name">
+                First Name
+            </label>
+            <div class="col-lg-6">
+                <input type="text" class="form-control small" id="id_first_name" value="{{ profile.first_name }}" readonly="readonly">
+            </div>
+        </div>
+
+        <!-- Last Name -->
+        <div class="form-group row pb-4">
+            <label class="col-lg-3 control-label text-lg-end pt-2 small fw-normal text-secondary mb-3 mb-lg-0" for="id_last_name">
+                Last Name
+            </label>
+            <div class="col-lg-6">
+                <input type="text" class="form-control small" id="id_last_name" value="{{ profile.last_name }}" readonly="readonly">
+            </div>
+        </div>
+
+        <!-- Company -->
+        <div class="form-group row pb-4">
+            <label class="col-lg-3 control-label text-lg-end pt-2 small fw-normal text-secondary mb-3 mb-lg-0" for="id_company">
+                Company
+            </label>
+            <div class="col-lg-6">
+                <input type="text" class="form-control small" id="id_company" value="{{ profile.company }}" readonly="readonly">
+            </div>
+        </div>
+
+        <!-- Email Address -->
+        <div class="form-group row pb-4">
+            <label class="col-lg-3 control-label text-lg-end pt-2 small fw-normal text-secondary mb-3 mb-lg-0" for="id_email_address">
+                Email Address
+            </label>
+            <div class="col-lg-6">
+                <input type="email" class="form-control small" id="id_email_address" value="{{ profile.email_address }}" readonly="readonly">
+            </div>
+        </div>
+
+        <!-- Mobile Number -->
+        <div class="form-group row pb-4">
+            <label class="col-lg-3 control-label text-lg-end pt-2 small fw-normal text-secondary mb-3 mb-lg-0" for="id_mobile_number">
+                Mobile Number
+            </label>
+            <div class="col-lg-6">
+                <input type="tel" class="form-control small" id="id_mobile_number" value="{{ profile.mobile_number }}" readonly="readonly">
+            </div>
+        </div>
+
+        <!-- City -->
+        <div class="form-group row pb-4">
+            <label class="col-lg-3 control-label text-lg-end pt-2 small fw-normal text-secondary mb-3 mb-lg-0" for="id_city">
+                City
+            </label>
+            <div class="col-lg-6">
+                <input type="text" class="form-control small" id="id_city" value="{{ profile.city }}" readonly="readonly">
+            </div>
+        </div>
+
+        <!-- Country -->
+        <div class="form-group row pb-4">
+            <label class="col-lg-3 control-label text-lg-end pt-2 small fw-normal text-secondary mb-3 mb-lg-0" for="id_country">
+                Country
+            </label>
+            <div class="col-lg-6">
+                <input type="text" class="form-control small" id="id_country" value="{{ profile.country }}" readonly="readonly">
+            </div>
+        </div>
+
+        <!-- Client Logo -->
+        <div class="form-group row pb-4">
+            <label class="col-lg-3 control-label text-lg-end pt-2 small fw-normal text-secondary mb-3 mb-lg-0" for="id_logo">Logo</label>
+            {% if profile.logo %}
+                <img class="float-start m-0" src="{{ profile.logo.url }}" style="max-height: 2rem; width: auto;">
+            {% else %}
+                <div class="col-lg-6">
+                    <input type="text" class="form-control small" id="id_logo" value="You have not uploaded a logo yet." readonly="readonly">
+                </div>
+            {% endif %}
+        </div>
+        <div class="action-buttons text-center pb-5">
+
+            <a href="{% url 'invoicer:update_profile' %}">
+                <button type="button" class="mb-1 mt-1 me-1 btn btn-skin text-white">Edit</button>
+            </a>
+        </div>
+    </div>
+</div>
+    </div>
+
+{% endblock %}

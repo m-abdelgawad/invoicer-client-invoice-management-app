@@ -1,0 +1,71 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+
+        <meta charset="utf-8" />
+        <meta name="viewport"content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+
+        <!-- Page Title -->
+        <title>{% block title %}{% endblock %} - Invoicer</title>
+
+        <!-- Page Description -->
+        <meta name="description" content="{% block meta_description %}{% endblock %}" />
+
+        <!-- Page Author -->
+        <meta name="author" content="Mohamed AbdelGawad" />
+
+        <!-- Open Graph meta data -->
+        <meta property="og:title" content="{% block og_title %}{% endblock %}" />
+        <meta property="og:url" content="{{ request.build_absolute_uri }}" />
+        <meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}{% block og_image %}{% endblock %}" />
+
+        <!-- Favicon-->
+        <link rel="icon" type="image/x-icon" href="{% static "assets/favicon.png" %}" />
+
+        <!-- Bootstrap Core CSS -->
+        {% include "includes/inline_css/bootstrap_css.html" %}
+
+        <!-- Core Theme Styles -->
+        {% include "includes/inline_css/styles.html" %}
+
+        <!-- Custom Block for applications -->
+        {% block extra_head %}{% endblock %}
+
+        <!-- Bootstrap core JS-->
+        {% include "includes/inline_js/bootstrap_js.html" %}
+
+        <!-- Font Awesome -->
+        {% include "includes/inline_js/font_awesome_6.4.0.html" %}
+
+    </head>
+
+    <body class="d-flex flex-column h-100">
+
+        <!-- Google Analytics - Google tag (gtag.js) -->
+        {% include "includes/inline_js/google_analytics.html" %}
+
+        <!-- Start Page Content -->
+        <main class="flex-shrink-0">
+
+            <!-- Content -->
+            {% block content %}{% endblock %}
+
+
+        </main>
+        <!-- End Page Content -->
+
+        <!-- Go To Top Button -->
+        {% include "includes/go_to_top_button.html" %}
+
+        <!-- Add border bottom to the sticky navbar on scroll -->
+        {% include "includes/inline_js/sticky_navbar_border_on_scroll.html" %}
+
+        <!-- extra block for placing scripts files -->
+        {% block extra_body %}{% endblock %}
+
+    </body>
+
+</html>

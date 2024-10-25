@@ -1,0 +1,45 @@
+<form method="POST">
+    {% csrf_token %}
+
+    {% if login_form.non_field_errors %}
+        <div class="alert alert-danger" role="alert">
+            {% for error in login_form.non_field_errors %}
+                {{ error }}
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    {% if login_form.username.errors %}
+        <div class="alert alert-danger" role="alert">
+            {% for error in login_form.username.errors %}
+                {{ error }}
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    {% if login_form.password.errors %}
+        <div class="alert alert-danger" role="alert">
+            {% for error in login_form.password.errors %}
+                {{ error }}
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <div class="form-floating mb-0">
+        <input type="text" name="username" class="form-control" id="username" placeholder="Username">
+        <label for="username">Username</label>
+        <div class="invalid-feedback" data-sb-feedback="username:required">A username is required.</div>
+    </div>
+    <br>
+    <div class="form-group form-floating mb-0">
+        <input type="password" name="password" class="form-control" id="password" placeholder="Password">
+        <label for="password">Password</label>
+    </div>
+    <br>
+    <!-- Captcha -->
+    <div id="recaptcha" class="form-floating mb-0">
+        {{ login_form.captcha }}
+    </div>
+    <br>
+    <button type="submit" name="login_form_submit" class="btn btn-skin text-white">Sign In</button>
+</form>

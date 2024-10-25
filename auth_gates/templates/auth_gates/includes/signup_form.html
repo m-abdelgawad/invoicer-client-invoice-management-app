@@ -1,0 +1,48 @@
+<form method="POST">
+    {% csrf_token %}
+    {% if register_form.errors %}
+        <div class="alert alert-danger" role="alert">
+            {{ register_form.errors }}
+        </div>
+    {% endif %}
+    <div class="form-floating mb-0">
+        <input type="text" name="first_name" class="form-control" id="id_first_name" placeholder="e.g. Mohamed">
+        <label for="id_first_name">First Name</label>
+        <div class="invalid-feedback" data-sb-feedback="first name:required">A first name is required.</div>
+    </div>
+    <br>
+    <div class="form-floating mb-0">
+        <input type="text" name="last_name" class="form-control" id="last_name" placeholder="e.g. AbdelGawad">
+        <label for="last_name">Last Name</label>
+        <div class="invalid-feedback" data-sb-feedback="last name:required">A last name is required.</div>
+    </div>
+    <br>
+    <div class="form-floating mb-0">
+        <input type="text" name="username" class="form-control" id="register_username" placeholder="e.g. mohamed_abdelgawad">
+        <label for="register_username">Username</label>
+        <div class="invalid-feedback" data-sb-feedback="username:required">A username is required.</div>
+    </div>
+    <br>
+    <div class="form-floating mb-0">
+        <input type="email" name="email" class="form-control" id="id_email" placeholder="e.g. mohamed@automagicdeveloper.com">
+        <label for="id_email">Email</label>
+        <div class="invalid-feedback" data-sb-feedback="email:required">An Email is required.</div>
+    </div>
+    <br>
+    <div class="form-group form-floating mb-0">
+        <input type="password" name="password1" class="form-control" id="id_password1" placeholder="Password">
+        <label for="id_password1">Password</label>
+    </div>
+    <br>
+    <div class="form-group form-floating mb-0">
+        <input type="password" name="password2"1 class="form-control" id="id_password2" placeholder="Repeat password">
+        <label for="id_password2">Password Confirmation</label>
+    </div>
+    <br>
+    <!-- Captcha -->
+    <div id="recaptcha" class="form-floating mb-0">
+        {{ register_form.captcha }}
+    </div>
+    <br>
+    <button type="submit" name="register_form_submit" class="btn btn-skin text-white">Sign Up</button>
+</form>

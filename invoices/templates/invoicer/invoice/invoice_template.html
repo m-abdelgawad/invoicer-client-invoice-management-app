@@ -1,0 +1,143 @@
+{% load static %}
+<html>
+<head>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .card {
+            margin-bottom: 1.5rem;
+        }
+        .card {
+            position: relative;
+            display: -ms-flexbox;
+            display: flex;
+            -ms-flex-direction: column;
+            flex-direction: column;
+            min-width: 0;
+            word-wrap: break-word;
+            background-color: #fff;
+            background-clip: border-box;
+            border: 1px solid #c8ced3;
+            border-radius: .25rem;
+        }
+        .card-header:first-child {
+            border-radius: calc(0.25rem - 1px) calc(0.25rem - 1px) 0 0;
+        }
+        .card-header {
+            padding: .75rem 1.25rem;
+            margin-bottom: 0;
+            background-color: #f0f3f5;
+            border-bottom: 1px solid #c8ced3;
+        }
+    </style>
+</head>
+<body>
+<div class="container-fluid">
+    <div data-select2-id="ui-view" id="ui-view">
+        <div>
+            <div class="card my-4">
+                <div class="card-header">Invoice
+                    <strong>#{{ invoice.invoice_number }}</strong>
+                    <a class="btn btn-sm btn-primary float-right mr-1 d-print-none" data-abc="true"
+                       href="#" onclick="javascript:window.print();">
+                        <i class="fa fa-print"></i> Print
+                    </a>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-4">
+                        <div class="col-sm-4">
+                            <h6 class="mb-3">From:</h6>
+                            <div class="mb-3">
+                                <img height="30px" src="{{ profile.logo.url }}"/>
+                            </div>
+                            <div>
+                                <strong>{{ profile.company }}</strong>
+                            </div>
+                            <div>{{ profile.first_name }} {{ profile.last_name }}</div>
+                            <div>{{ profile.city }}, {{ profile.country }}</div>
+                            <div>{{ profile.email_address }}</div>
+                            <div>{{ profile.mobile_number }}</div>
+                        </div>
+                        <div class="col-sm-4">
+                            <h6 class="mb-3">To:</h6>
+                            <div class="mb-3">
+                                <img height="30px" src="{{ invoice.client.logo.url }}"/>
+                            </div>
+                            <div>
+                                <strong>{{ invoice.client.company }}</strong>
+                            </div>
+                            <div>{{ invoice.client.first_name }} {{ invoice.client.last_name }}</div>
+                            <div>{{ invoice.client.city }}, {{ invoice.client.country }}</div>
+                            <div>{{ invoice.client.email_address }}</div>
+                            <div>{{ invoice.client.mobile_number }}</div>
+                        </div>
+                        <div class="col-sm-4">
+                            <h6 class="mb-3">Details:</h6>
+                            <div><strong>Invoice: </strong>#{{ invoice.invoice_number }}</div>
+                            <div><strong>Created Date: </strong>{{ invoice.created_date|date:"M d, Y" }}</div>
+                            <div><strong>Due Date: </strong>{{ invoice.due_date|date:"M d, Y" }}</div>
+                            <div><strong>Notes: </strong><br>
+                                {{ invoice.notes }}
+                            </div>
+                            <div><strong>Status: </strong>{{ invoice.status }}</div>
+                        </div>
+                    </div>
+                    <div class="table-responsive-sm">
+                        <table class="table table-striped">
+                            <thead>
+                            <tr>
+                                <th class="center">#</th>
+                                <th>Item</th>
+                                <th>Description</th>
+                                <th class="center">Quantity</th>
+                                <th class="center">Unit</th>
+                                <th class="right">Unit Price</th>
+                                <th class="right">Total Price</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for service in invoice.services.all %}
+                                <tr>
+                                <td name="service_row_number" class="center">{{ forloop.counter }}</td>
+                                <td name="service_name" class="left">{{ service.title }}</td>
+                                <td name="service_description" class="left">{{ service.description }}</td>
+                                <td name="service_quantity" class="center">{{ service.quantity }}</td>
+                                <td name="service_unit" class="center">{{ service.quantity_unit }}</td>
+                                <td name="service_unit_price" class="right">{{ service.unit_price }} {{ service.currency }}</td>
+                                <td name="service_total_price" class="right">{{ service.total_price }} {{ service.currency }}</td>
+                            </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-4 col-sm-5 ml-auto">
+                            <table class="table table-clear">
+                                <tbody>
+                                <tr>
+                                    <td class="left">
+                                        <strong>Subtotal</strong>
+                                    </td>
+                                    <td class="right">{{ invoice.get_total_price }} {{ invoice.services.all.0.currency }}</td>
+                                </tr>
+                                <tr>
+                                    <td class="left">
+                                        <strong>Total</strong>
+                                    </td>
+                                    <td class="right">
+                                        <strong>{{ invoice.get_total_price }} {{ invoice.services.all.0.currency }}</strong>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+<!--                            <a class="btn btn-success" data-abc="true" href="#">-->
+<!--                                <i class="fa fa-usd"></i> Proceed to Payment</a>-->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript"></script>
+</body>
+</html>

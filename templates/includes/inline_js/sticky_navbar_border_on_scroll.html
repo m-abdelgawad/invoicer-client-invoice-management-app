@@ -1,0 +1,16 @@
+<script defer>
+    // Get the navbar element
+    const navbar = document.querySelector('.navbar');
+
+    // Add an event listener to the window object to listen for the scroll event
+    window.addEventListener('scroll', function() {
+    // Check the current position of the page
+    if (window.pageYOffset > 0) {
+        // Add the border-bottom class to the navbar
+        navbar.classList.add('border-bottom');
+    } else {
+        // Remove the border-bottom class from the navbar
+        navbar.classList.remove('border-bottom');
+    }
+    });
+</script>

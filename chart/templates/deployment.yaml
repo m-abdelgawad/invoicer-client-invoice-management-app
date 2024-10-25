@@ -1,0 +1,82 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: invoicer-app-deployment
+  namespace: invoicer
+  labels:
+    name: invoicer-app-deployment
+    environment: production
+    service-type: application
+    app: invoicer
+spec:
+  replicas: {{ .Values.replicas.app }}
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+  selector:
+    matchLabels:
+      name: invoicer-app-pod
+      environment: production
+      service-type: application
+      app: invoicer
+  template:
+    metadata:
+      name: invoicer-app-pod
+      namespace: invoicer
+      labels:
+        name: invoicer-app-pod
+        environment: production
+        service-type: application
+        app: invoicer
+      annotations:
+        imageregistry: "https://hub.docker.com/"
+    spec:
+      securityContext:
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+      imagePullSecrets:
+        - name: dockerhub-secret
+      restartPolicy: Always
+      containers:
+        - name: app
+          image: mabdelgawad94/invoicer:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: {{ .Values.app.containerPort  }}
+          readinessProbe:
+            httpGet:
+              path: /
+              port: {{ .Values.app.containerPort  }}
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            failureThreshold: 20
+          livenessProbe:
+            httpGet:
+              path: /
+              port: {{ .Values.app.containerPort  }}
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            failureThreshold: 20
+          resources:
+            requests:
+              memory: "10M"
+              cpu: 0.01
+            limits:
+              memory: "2G"
+              cpu: 2
+          envFrom:
+            - configMapRef:
+                name: invoicer-cm
+            - secretRef:
+                name: invoicer-secrets
+          volumeMounts:
+            - mountPath: /invoicer/media/
+              name: invoicer-media-pvc
+          securityContext:
+            allowPrivilegeEscalation: false
+      volumes:
+        - name: invoicer-media-pvc
+          persistentVolumeClaim:
+            claimName: invoicer-media-pvc

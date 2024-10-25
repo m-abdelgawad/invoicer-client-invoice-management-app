@@ -1,0 +1,161 @@
+{% extends "invoicer/dashboard_base.html" %}
+{% load static %}
+
+{% block title %}Add Client - Invoicer{% endblock %}
+{% block og_title %}Add Client - Invoicer{% endblock %}
+{% block meta_description %}Add Client in the Invoicer app{% endblock %}
+{% block og_image %}{% static "assets/automagic-developer.jpg" %}{% endblock %}
+
+{% block page_css %}
+    <style>
+        #add_new_client {
+            background-color: var(--skin-color);
+        }
+    </style>
+{% endblock %}
+
+{% block page_js %}
+
+{% endblock %}
+
+{% block dashboard_content %}
+
+    <div class="site-padding">
+        <form class="form-horizontal form-bordered" enctype="multipart/form-data" method="post">
+        {% csrf_token %}
+        <div class="card my-5 dashboard-card">
+            <div class="card-header" style="position:relative;">
+                <h5 class="card-title skin-color mt-2 fs-6 skin-color">
+                    Add New Client
+                </h5>
+            </div>
+            <div class="card-body table-responsive">
+
+                <!-- First Name -->
+                <div class="form-group row pb-4">
+                    <label class="col-lg-3 control-label text-lg-end pt-2 small fw-normal text-secondary mb-3 mb-lg-0"
+                           for="id_first_name">
+                        First Name
+                    </label>
+                    <div class="col-lg-6">
+                        <input class="form-control small" id="id_first_name" name="first_name"
+                               placeholder="eg.: Mohamed" type="text">
+                    </div>
+                </div>
+
+                <!-- Last Name -->
+                <div class="form-group row pb-4">
+                    <label class="col-lg-3 control-label text-lg-end pt-2 small fw-normal text-secondary mb-3 mb-lg-0"
+                           for="id_last_name">
+                        Last Name
+                    </label>
+                    <div class="col-lg-6">
+                        <input class="form-control small" id="id_last_name" name="last_name"
+                               placeholder="eg.: AbdelGawad" type="text">
+                    </div>
+                </div>
+
+                <!-- Company -->
+                <div class="form-group row pb-4">
+                    <label class="col-lg-3 control-label text-lg-end pt-2 small fw-normal text-secondary mb-3 mb-lg-0"
+                           for="id_company">
+                        Company
+                    </label>
+                    <div class="col-lg-6">
+                        <input class="form-control small" id="id_company" name="company"
+                               placeholder="eg.: Upwork"
+                               type="text">
+                    </div>
+                </div>
+
+                <!-- Email Address -->
+                <div class="form-group row pb-4">
+                    <label class="col-lg-3 control-label text-lg-end pt-2 small fw-normal text-secondary mb-3 mb-lg-0"
+                           for="id_email_address">
+                        Email Address
+                    </label>
+                    <div class="col-lg-6">
+                        <input class="form-control small" id="id_email_address" name="email_address"
+                               placeholder="eg.: Mohamed@automagicdeveloper.com">
+                    </div>
+                </div>
+
+                <!-- Mobile Number -->
+                <div class="form-group row pb-4">
+                    <label class="col-lg-3 control-label text-lg-end pt-2 small fw-normal text-secondary mb-3 mb-lg-0"
+                           for="id_mobile_number">
+                        Mobile Number
+                    </label>
+                    <div class="col-lg-6">
+                        <input class="form-control small" id="id_mobile_number" id="inputDefault"
+                               name="mobile_number" placeholder="eg.: +201069052620"
+                               type="tel">
+                    </div>
+                </div>
+
+                <!-- City -->
+                <div class="form-group row pb-4">
+                    <label class="col-lg-3 control-label text-lg-end pt-2 small fw-normal text-secondary mb-3 mb-lg-0"
+                           for="id_city">
+                        City
+                    </label>
+                    <div class="col-lg-6">
+                        <input class="form-control small" id="id_city" name="city"
+                               placeholder="eg.: Alexandria"
+                               type="text">
+                    </div>
+                </div>
+
+                <!-- Country -->
+                <div class="form-group row pb-4">
+                    <label class="col-lg-3 control-label text-lg-end pt-2 small fw-normal text-secondary mb-3 mb-lg-0"
+                           for="id_country">
+                        Country
+                    </label>
+                    <div class="col-lg-6">
+                        <input class="form-control small" id="id_country" name="country"
+                               placeholder="eg.: Egypt"
+                               type="text">
+                    </div>
+                </div>
+
+                <!-- Client Logo -->
+                <div class="form-group row pb-4">
+                    <label for="id_logo" class="col-lg-3 control-label text-lg-end pt-2 small fw-normal text-secondary mb-3 mb-lg-0">Logo</label>
+                    <div class="col-lg-6">
+                        <input class="form-control small" id="id_logo" name="logo" type="file">
+                    </div>
+                    <div class="col-3 mt-2 mt-lg-0">
+                        <button class="btn btn-danger btn-sm" id="remove_logo" style="display:none;"
+                                type="button"><i class="fa-solid fa-trash"></i></button>
+                        <script>
+                          var file_input = document.getElementById('id_logo');
+                          var remove_button = document.getElementById('remove_logo');
+
+                          file_input.addEventListener('change', function() {
+                            if (file_input.files.length > 0) {
+                              remove_button.style.display = 'block';
+                            } else {
+                              remove_button.style.display = 'none';
+                            }
+                          });
+
+                          remove_button.addEventListener('click', function() {
+                            file_input.value = '';
+                            remove_button.style.display = 'none';
+                          });
+
+                        </script>
+                    </div>
+                </div>
+
+                <div class="action-buttons text-center py-5">
+                    <button type="submit" class="mb-1 mt-1 me-1 btn btn-skin text-white">Add New Client</button>
+                </div>
+
+            </div>
+        </div>
+    </form>
+    </div>
+
+{% endblock %}

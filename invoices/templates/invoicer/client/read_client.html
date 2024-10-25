@@ -1,0 +1,158 @@
+{% extends "invoicer/dashboard_base.html" %}
+{% load static %}
+
+{% block title %}View Client - Invoicer{% endblock %}
+{% block og_title %}View Client - Invoicer{% endblock %}
+{% block meta_description %}View Client in the Invoicer app{% endblock %}
+{% block og_image %}{% static "assets/automagic-developer.jpg" %}{% endblock %}
+
+{% block page_css %}
+    <style>
+        #clients_list {
+            background-color: var(--skin-color);
+        }
+    </style>
+{% endblock %}
+
+{% block page_js %}
+
+{% endblock %}
+
+{% block dashboard_content %}
+
+    <div class="site-padding">
+        <div class="card my-5 dashboard-card">
+    <div class="card-header" style="position:relative;">
+        <h5 class="card-title skin-color mt-2 fs-6 skin-color">
+            View Client
+        </h5>
+    </div>
+    <div class="card-body table-responsive">
+
+        <!-- First Name -->
+        <div class="form-group row pb-4">
+            <label class="col-lg-3 control-label text-lg-end pt-2 small fw-normal text-secondary mb-3 mb-lg-0" for="id_first_name">
+                First Name
+            </label>
+            <div class="col-lg-6">
+                <input type="text" class="form-control small" id="id_first_name" value="{{ client.first_name }}" readonly="readonly">
+            </div>
+        </div>
+
+        <!-- Last Name -->
+        <div class="form-group row pb-4">
+            <label class="col-lg-3 control-label text-lg-end pt-2 small fw-normal text-secondary mb-3 mb-lg-0" for="id_last_name">
+                Last Name
+            </label>
+            <div class="col-lg-6">
+                <input type="text" class="form-control small" id="id_last_name" value="{{ client.last_name }}" readonly="readonly">
+            </div>
+        </div>
+
+        <!-- Company -->
+        <div class="form-group row pb-4">
+            <label class="col-lg-3 control-label text-lg-end pt-2 small fw-normal text-secondary mb-3 mb-lg-0" for="id_company">
+                Company
+            </label>
+            <div class="col-lg-6">
+                <input type="text" class="form-control small" id="id_company" value="{{ client.company }}" readonly="readonly">
+            </div>
+        </div>
+
+        <!-- Email Address -->
+        <div class="form-group row pb-4">
+            <label class="col-lg-3 control-label text-lg-end pt-2 small fw-normal text-secondary mb-3 mb-lg-0" for="id_email_address">
+                Email Address
+            </label>
+            <div class="col-lg-6">
+                <input type="email" class="form-control small" id="id_email_address" value="{{ client.email_address }}" readonly="readonly">
+            </div>
+        </div>
+
+        <!-- Mobile Number -->
+        <div class="form-group row pb-4">
+            <label class="col-lg-3 control-label text-lg-end pt-2 small fw-normal text-secondary mb-3 mb-lg-0" for="id_mobile_number">
+                Mobile Number
+            </label>
+            <div class="col-lg-6">
+                <input type="tel" class="form-control small" id="id_mobile_number" value="{{ client.mobile_number }}" readonly="readonly">
+            </div>
+        </div>
+
+        <!-- City -->
+        <div class="form-group row pb-4">
+            <label class="col-lg-3 control-label text-lg-end pt-2 small fw-normal text-secondary mb-3 mb-lg-0" for="id_city">
+                City
+            </label>
+            <div class="col-lg-6">
+                <input type="text" class="form-control small" id="id_city" value="{{ client.city }}" readonly="readonly">
+            </div>
+        </div>
+
+        <!-- Country -->
+        <div class="form-group row pb-4">
+            <label class="col-lg-3 control-label text-lg-end pt-2 small fw-normal text-secondary mb-3 mb-lg-0" for="id_country">
+                Country
+            </label>
+            <div class="col-lg-6">
+                <input type="text" class="form-control small" id="id_country" value="{{ client.country }}" readonly="readonly">
+            </div>
+        </div>
+
+        <!-- Client Logo -->
+        <div class="form-group row pb-4">
+            <label class="col-lg-3 control-label text-lg-end pt-2 small fw-normal text-secondary mb-3 mb-lg-0" for="id_logo">Logo</label>
+            {% if client.logo %}
+                <img class="float-start m-0" src="{{ client.logo.url }}" style="max-height: 2rem; width: auto;">
+            {% else %}
+                <div class="col-lg-6">
+                    <input type="text" class="form-control small" id="id_logo" value="Client doesn't have a logo." readonly="readonly">
+                </div>
+            {% endif %}
+        </div>
+        <div class="action-buttons text-center py-5">
+
+            <a href="{% url 'invoicer:update_client' client.slug %}">
+                <button type="button" class="mb-1 mt-1 me-1 btn btn-skin text-white">Edit</button>
+            </a>
+            <button data-bs-target="#modalDeleteClient-{{ client.id }}" data-bs-toggle="modal" type="button" class="mb-1 mt-1 me-1 btn btn-danger">Delete</button>
+            <!-- Modal: Delete Client -->
+            <div aria-hidden="true" aria-labelledby="exampleModalLabel" class="modal fade"
+                     id="modalDeleteClient-{{ client.id }}"
+                     tabindex="-1">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header bg-danger">
+                            <h1 class="modal-title fs-6 text-white" id="exampleModalLabel">Delete Client?</h1>
+                            <button aria-label="Close" class="btn-close text-white" data-bs-dismiss="modal"
+                                    style="filter: brightness(0) invert(1);" type="button"></button>
+                        </div>
+                        <div class="modal-body fw-bold py-4">
+                            <div class="row">
+                                <div class="col-3 text-center">
+                                    <i class="fa-solid fa-triangle-exclamation"
+                                       style="color: #ff0000; font-size: 3rem;"></i>
+                                </div>
+                                <div class="col-9 text-start">
+                                    <p class="fs-6 fw-normal mb-0 pb-0">
+                                        Are you sure that you want to delete this client "{{ client.first_name }} {{ client.last_name }}"?
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <a href="{% url 'invoicer:delete_client' client.slug %}">
+                                <button class="btn btn-danger" type="button">Delete</button>
+                            </a>
+                            <button class="btn btn-secondary" data-bs-dismiss="modal" type="button">Cancel
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+    </div>
+
+{% endblock %}
